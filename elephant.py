@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_restful import reqparse, abort, Api, Resource
 
 import json
@@ -19,7 +19,7 @@ sessionStorage = {}
 @app.route("/", methods=['POST', 'GET'])
 def main_alice():
 	if request.method == 'GET':
-		return "Hello!\n"
+		return jsonify("Hello!\n")
 	
 	if request.method == 'POST':
 	# Функция получает тело запроса и возвращает ответ.
@@ -38,7 +38,7 @@ def main_alice():
 
 		logging.info('Response: %r', response)
 		
-		print(request.json['version'])
+		#print(request.json['version'])
 		return json.dumps(
 			response,
 			ensure_ascii=False,
