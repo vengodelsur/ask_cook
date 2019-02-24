@@ -1,12 +1,14 @@
 import scrapy
 
 class EdaSpider(scrapy.Spider):
-    name = "eda"
+    """ scrapy crawl eda -a start_url="https://eda.ru/recepty/zakuski/brusketta-s-pomidorami-29566" """
 
-    start_urls = [
-            'https://eda.ru/recepty/supy/sirnij-sup-po-francuzski-s-kuricej-32614',
-            'https://eda.ru/recepty/osnovnye-blyuda/kurica-v-kislo-sladkom-souse-po-kitajski-14456',
-        ]
+    name = "eda"
+    
+    def __init__(self, *args, **kwargs): 
+        super(EdaSpider, self).__init__(*args, **kwargs) 
+
+        self.start_urls = [kwargs.get('start_url')] 
 
     def parse(self, response):
         yield {
