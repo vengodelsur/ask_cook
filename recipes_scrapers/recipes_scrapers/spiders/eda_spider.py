@@ -1,4 +1,4 @@
-mport scrapy
+import scrapy
 
 
 class EdaSpider(scrapy.Spider):
