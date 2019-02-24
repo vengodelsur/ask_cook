@@ -1,7 +1,7 @@
 import scrapy
 
-class IngredientsSpider(scrapy.Spider):
-    name = "ingredients"
+class EdaSpider(scrapy.Spider):
+    name = "eda"
 
     start_urls = [
             'https://eda.ru/recepty/supy/sirnij-sup-po-francuzski-s-kuricej-32614',
