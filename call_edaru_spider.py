@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.join(os.getcwd(), 'recipes_scrapers'))
 
-from recipes_scrapers.spiders.eda_spider import EdaSpider
+from recipes_scrapers.spiders.edaru_spider import EdaRuSpider
 from scrapy.crawler import CrawlerProcess
 
 # more about running scrapy from script
@@ -14,7 +14,7 @@ process = CrawlerProcess({'FEED_FORMAT': 'json',
                          'FEED_URI': DATA_DIR + 'eda_ru.json'})
 
 process.crawl(
-    EdaSpider, start_url='https://eda.ru/recepty/zakuski/brusketta-s-pomidorami-29566')
+    EdaRuSpider, start_url='https://eda.ru/recepty/zakuski/brusketta-s-pomidorami-29566')
 process.start()
 
 # we can get the crawling results into a variable using signals https://stackoverflow.com/questions/23574636/scrapy-from-script-output-in-json

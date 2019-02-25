@@ -8,7 +8,9 @@
 import scrapy
 
 
-class RecipesScrapersItem(scrapy.Item):
+class Say7InfoRecipe(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    title = scrapy.Field()
+    ingredients = scrapy.Field()
+    steps = scrapy.Field()

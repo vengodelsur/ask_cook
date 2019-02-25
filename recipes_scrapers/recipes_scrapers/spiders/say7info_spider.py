@@ -1,10 +1,10 @@
-from say7info_scraper.items import Say7InfoRecipe
+from recipes_scrapers.items import Say7InfoRecipe
 import datetime
 import scrapy
 
 
 class Say7InfoSpider(scrapy.Spider):
-	name = "pySay7Info-spider"
+	name = "Say7Info"
 	start_urls = ["https://www.say7.info/cook/recipe/958-Pechenochnyie-oladi.html"]
 	
 	def parse(self, response):
