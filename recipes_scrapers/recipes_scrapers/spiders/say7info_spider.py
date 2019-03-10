@@ -9,20 +9,16 @@ class Say7InfoSpider(scrapy.Spider):
         "https://www.say7.info/cook/recipe/958-Pechenochnyie-oladi.html"]
 
     def parse(self, response):
-        title = response.css('[itemprop="name"]').xpath("text()").extract()[0]
+        title = response.css('[itemprop="name"]::text').get()
         ingredients = self.parse_ingredients(response)
         steps = self.parse_steps(response)
 
         return Say7InfoRecipe(title=u"{}".format(title), ingredients=ingredients, steps=steps)
 
     def parse_steps(self, response):
-        steps = []
-        for i, step in enumerate(response.css('[id="stp"]').xpath("p/text()")):
-            steps.append(step.extract())
+        steps = response.css('[itemprop="recipeInstructions"] p::text').getall()
         return steps
 
     def parse_ingredients(self, response):
-        ingredients = []
-        for i, ing in enumerate(response.css('div.c8:nth-child(5)').xpath("ul/li/text()")):
-            ingredients.append(ing.extract())
+        ingredients = response.css('[itemprop="recipeIngredient"]::text').getall()
         return ingredients
