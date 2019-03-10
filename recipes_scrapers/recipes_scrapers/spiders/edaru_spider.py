@@ -14,13 +14,13 @@ class EdaRuSpider(scrapy.Spider):
 
     def parse(self, response):
 
-        selectors = {'recipe_title': 'div.recipe__title h1.recipe__name::text',
-                     'ingredients': 'div.ingredients-list__content p::attr(data-ingredient-object)',
-                     'steps': 'ul.recipe__steps li > div.instruction__wrap > span.instruction__description::text'}
+        selectors = {'recipe_title': 'h1.recipe__name::text',
+                     'ingredient': 'p::attr(data-ingredient-object)',
+                     'step': 'span.instruction__description::text'}
         yield {
             'url': response.request.url,
             'recipe_title': response.css(selectors['recipe_title']).get(),
-            'ingredients': response.css(selectors['ingredients']).getall(),
-            'steps': response.css(selectors['steps']).getall()
+            'ingredients': response.css(selectors['ingredient']).getall(),
+            'steps': response.css(selectors['step']).getall()
 
         }
