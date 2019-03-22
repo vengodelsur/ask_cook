@@ -3,7 +3,7 @@ import scrapy
 
 class EdaRuSpider(scrapy.Spider):
 
-    """ scrapy crawl eda -a start_url="https://eda.ru/recepty/zakuski/brusketta-s-pomidorami-29566" """
+    """ scrapy crawl EdaRu -a start_url="https://eda.ru/recepty/zakuski/brusketta-s-pomidorami-29566" """
 
     name = "EdaRu"
 
