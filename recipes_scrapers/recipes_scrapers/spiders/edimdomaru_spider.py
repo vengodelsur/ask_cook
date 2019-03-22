@@ -1,5 +1,5 @@
 import scrapy
-
+from recipes_scrapers.settings import SELECTORS
 
 class EdimdomaRuSpider(scrapy.Spider):
 
@@ -11,21 +11,18 @@ class EdimdomaRuSpider(scrapy.Spider):
         super(EdimdomaRuSpider, self).__init__(*args, **kwargs)
 
         self.start_urls = [kwargs.get('start_url')]
-        self.selectors = {'recipe_title': 'h1.recipe-header__name::text',
-                          'ingredient_name': 'span.recipe_ingredient_title::text',
-                          'ingredient_amount': 'td.definition-list-table__td.definition-list-table__td_value::text',
-                          'ingredient': 'div.field-row.recipe_ingredients  table.definition-list-table',
-                          'step': 'div.plain-text.recipe_step_text::text'}
+        
 
     def parse(self, response):
 
         yield {
             'url': response.request.url,
-            'recipe_title': response.css(self.selectors['recipe_title']).get(),
+            'recipe_title': response.css(SELECTORS['recipe_title']).get(),
             'ingredients': self.parse_ingredients(response),
-            'steps': response.css(self.selectors['step']).getall()
+            'steps': response.css(SELECTORS['step']).getall()
 
         }
 
     def parse_ingredients(self, response):
-        return [{'name': ingredient.css(self.selectors['ingredient_name']).get(), 'amount': ingredient.css(self.selectors['ingredient_amount']).get()} for ingredient in response.css(self.selectors['ingredient'])]
+        
+        return [{'name': ingredient.css(SELECTORS['ingredient_name']).get(), 'amount': ingredient.css(SELECTORS['ingredient_amount']).get()} for ingredient in response.css(SELECTORS['ingredient'])]
