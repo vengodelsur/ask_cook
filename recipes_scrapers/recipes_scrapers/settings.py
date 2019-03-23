@@ -14,11 +14,11 @@ BOT_NAME = 'recipes_scrapers'
 SPIDER_MODULES = ['recipes_scrapers.spiders']
 NEWSPIDER_MODULE = 'recipes_scrapers.spiders'
 
-SELECTORS = {'recipe_title': 'h1.recipe-header__name::text',
+SELECTORS = {'edimdoma.ru' : {'recipe_title': 'h1.recipe-header__name::text',
                           'ingredient_name': 'span.recipe_ingredient_title::text',
                           'ingredient_amount': 'td.definition-list-table__td.definition-list-table__td_value::text',
                           'ingredient': 'div.field-row.recipe_ingredients  table.definition-list-table',
-                          'step': 'div.plain-text.recipe_step_text::text'}
+                          'step': 'div.plain-text.recipe_step_text::text'}}
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
