@@ -10,10 +10,7 @@ class EdimdomaRuSpider(BaseSpider):
     name = "EdimdomaRu"
 
     def __init__(self, *args, **kwargs):
-        super(BaseSpider, self).__init__(*args, **kwargs)
-
-
-        self.start_urls = [kwargs.get('start_url')]
+        super().__init__(*args, **kwargs)
         self.domain = 'edimdoma.ru'
 
     def parse_ingredients(self, response):
