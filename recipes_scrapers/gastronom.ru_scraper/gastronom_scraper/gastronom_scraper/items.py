@@ -12,6 +12,8 @@ class GastronomRecipe(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     title = scrapy.Field()
+    recipe_intro = scrapy.Field()
     ingredients = scrapy.Field()
     steps = scrapy.Field()
+    add_info = scrapy.Field()
 
