@@ -15,13 +15,18 @@ SPIDER_MODULES = ['recipes_scrapers.spiders']
 NEWSPIDER_MODULE = 'recipes_scrapers.spiders'
 
 SELECTORS = {'edimdoma.ru': {'recipe_title': 'h1.recipe-header__name::text',
+                             'ingredient_section': 'div.field-row.recipe_ingredients',
+                             'ingredient_section_name':'div.section-title::text',
+                             'ingredient': 'table.definition-list-table',
                              'ingredient_name': 'span.recipe_ingredient_title::text',
                              'ingredient_amount': 'td.definition-list-table__td.definition-list-table__td_value::text',
-                             'ingredient': 'div.field-row.recipe_ingredients  table.definition-list-table',
                              'step': 'div.plain-text.recipe_step_text::text'},
              'eda.ru': {'recipe_title': 'h1.recipe__name::text',
                         'ingredient': 'p::attr(data-ingredient-object)',
-                        'step': 'span.instruction__description::text'}}
+                        'step': 'span.instruction__description::text'},
+             'say7.info': {'recipe_title': '[itemprop="name"]::text',
+                           'ingredient': '[itemprop="recipeIngredient"]::text',
+                           'step': '[itemprop="recipeInstructions"] p::text'}}
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
