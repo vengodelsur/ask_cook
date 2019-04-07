@@ -76,7 +76,9 @@ class GastronomSpider(scrapy.Spider):
 			add_ing = []
 			if ing.xpath('child::*'):
 				add_ing = ing.xpath('child::*/text()').extract()
-			partial_ingredients.append(add_ing + ing.xpath('text()').extract())
+			ingredient = add_ing + ing.xpath('text()').extract()
+			ingredient_dict = {"name": [], "amount": [], "text": ingredient}
+			partial_ingredients.append(ingredient_dict)
 		return partial_ingredients
 	
 	def parse_steps(self, response):
