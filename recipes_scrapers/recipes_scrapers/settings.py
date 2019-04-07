@@ -15,6 +15,10 @@ SPIDER_MODULES = ['recipes_scrapers.spiders']
 NEWSPIDER_MODULE = 'recipes_scrapers.spiders'
 
 SELECTORS = {'edimdoma.ru': {'recipe_title': 'h1.recipe-header__name::text',
+                             'add_info_time': 'div.entry-stats__item.entry-stats__item_cooking > div.entry-stats__value',
+                             'add_info_servings': 'div.entry-stats__item.entry-stats__item_persons > div.entry-stats__value span::text',
+                             'add_info_description': 'div.recipe_description p::text',
+                             'add_info_nutritional_value': 'div.nutritional-value__container',
                              'ingredient_section': 'div.field-row.recipe_ingredients',
                              'ingredient_section_name':'div.section-title::text',
                              'ingredient': 'table.definition-list-table',

@@ -16,7 +16,8 @@ class BaseSpider(scrapy.Spider):
             'url': response.request.url,
             'recipe_title': response.css(SELECTORS[self.domain]['recipe_title']).get(),
             'ingredients': self.parse_ingredients(response),
-            'steps': response.css(SELECTORS[self.domain]['step']).getall()
+            'steps': response.css(SELECTORS[self.domain]['step']).getall(),
+            'add_info': self.parse_add_info(response) 
 
         }
 
