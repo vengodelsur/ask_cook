@@ -10,28 +10,40 @@ class EdimdomaRuSpider(BaseSpider):
     """
 
     name = "EdimdomaRu"
+    domain = 'edimdoma.ru'
+    selectors = SELECTORS[domain]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.domain = 'edimdoma.ru'
+        
 
     def parse_ingredients(self, response):
-        sections = response.css(SELECTORS[self.domain]['ingredient_section'])
+        sections = response.css(self.selectors['ingredient_section'])
         ingredients = {}
 
         for section in sections:
-            section_name = section.css(SELECTORS[self.domain]['ingredient_section_name']).get()
-            ing_list = section.css(SELECTORS[self.domain]['ingredient'])
+            section_name = section.css(self.selectors['ingredient_section_name']).get()
+            ing_list = section.css(self.selectors['ingredient'])
             ingredients[section_name] = self._get_ingredients(ing_list)
         return ingredients
 
     def parse_add_info(self, response):
-        time = response.css(SELECTORS[self.domain]['add_info_time'])
-        nutritional_value_container = response.css(SELECTORS[self.domain]['add_info_nutritional_value']) 
-        return {'Время готовки': [time.css('span::text').get(), time.xpath('text()').extract()[0]],
-                'Количество порций': response.css(SELECTORS[self.domain]['add_info_servings']).get(),
-                'Описание': response.css(SELECTORS[self.domain]['add_info_description']).get(),
+        time = response.css(self.selectors['add_info_time'])
+        nutritional_value_container = response.css(self.selectors['add_info_nutritional_value']) 
+        
+             
+        return {'Время готовки': self._get_time(time),
+                'Количество порций': response.css(self.selectors['add_info_servings']).get(),
+                'Описание': response.css(self.selectors['add_info_description']).get(),
                 'Пищевая ценность': self._get_nutritional_value(nutritional_value_container)}
+
+    def _get_time(self, time):
+        parts = time.css('span::text').getall()
+        time_list = []
+        for i in range(len(parts)):
+            time_list.append(parts[i])
+            time_list.append(time.xpath('text()').extract()[i])
+        return time_list
 
     def _get_nutritional_value(self, container):
         kkal = container.css('div.kkal-meter')
@@ -48,4 +60,4 @@ class EdimdomaRuSpider(BaseSpider):
         
 
     def _get_ingredients(self, ing_list):
-        return [{'name': ingredient.css(SELECTORS[self.domain]['ingredient_name']).get(), 'amount': ingredient.css(SELECTORS[self.domain]['ingredient_amount']).get()} for ingredient in ing_list]
+        return [{'name': ingredient.css(self.selectors['ingredient_name']).get(), 'amount': ingredient.css(self.selectors['ingredient_amount']).get()} for ingredient in ing_list]
