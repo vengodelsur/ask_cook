@@ -65,7 +65,7 @@ class Model:
 
         return output
 
-# Can be used as
+# Udpipe verb to dict
 model = Model('russian-syntagrus-ud-2.0-170801.udpipe')
 sentences = model.tokenize("Привет всем. Алиса дура! Я сделал все. Повтори уже! Порезать лук, накрошить муки, немного накромсать")
 
@@ -83,6 +83,6 @@ for sentence in sentences_parse:
 	for token in sentence:
 		print(token['upostag'])
 		if token['upostag'] == 'VERB':
-			verb_dict[token['lemma']] = list(sentence.metadata.values())[-1]
+			verb_dict[token['form']] = list(sentence.metadata.values())[-1]
 
 print(verb_dict)
