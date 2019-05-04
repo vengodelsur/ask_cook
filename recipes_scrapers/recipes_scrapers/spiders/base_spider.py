@@ -12,7 +12,7 @@ class BaseSpider(scrapy.Spider):
 
     def parse(self, response):
 
-        yield {
+        self.result = {
             'url': response.request.url,
             'recipe_title': response.css(SELECTORS[self.domain]['recipe_title']).get(),
             'ingredients': self.parse_ingredients(response),
@@ -20,7 +20,9 @@ class BaseSpider(scrapy.Spider):
             'add_info': self.parse_add_info(response) 
 
         }
+        yield self.result
 
     def parse_ingredients(self, response):
         return response.css(SELECTORS[self.domain]['ingredient']).getall()
-        
+    def parse_add_info(self, response):
+        return {}
