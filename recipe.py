@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import json
+
 
 def remove_multiple_spaces(string):
     return(' '.join(string.split()))
 
 class Recipe:
-    def __init__(self, json_filename):
-       with open(json_filename) as f:
-           json_recipe = json.load(f)[0]
+    def __init__(self, json):
+       json_recipe = json
        self.url = json_recipe['url']
        self.title = json_recipe['recipe_title']
        self.ingredients = json_recipe['ingredients']
