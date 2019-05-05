@@ -1,1 +1,1 @@
-web: gunicorn basic_scenario:app
+web: gunicorn demo:app
