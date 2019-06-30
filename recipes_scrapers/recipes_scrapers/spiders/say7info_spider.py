@@ -1,24 +1,15 @@
-from recipes_scrapers.items import Say7InfoRecipe
-import datetime
 import scrapy
+from .base_spider import BaseSpider
 
+class Say7InfoSpider(BaseSpider):
 
-class Say7InfoSpider(scrapy.Spider):
+    """ scrapy crawl Say7Info -a start_url="https://www.say7.info/cook/recipe/958-Pechenochnyie-oladi.html" """
+
     name = "Say7Info"
-    start_urls = [
-        "https://www.say7.info/cook/recipe/958-Pechenochnyie-oladi.html"]
 
-    def parse(self, response):
-        title = response.css('[itemprop="name"]::text').get()
-        ingredients = self.parse_ingredients(response)
-        steps = self.parse_steps(response)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.domain = 'say7.info'
 
-        return Say7InfoRecipe(title=u"{}".format(title), ingredients=ingredients, steps=steps)
 
-    def parse_steps(self, response):
-        steps = response.css('[itemprop="recipeInstructions"] p::text').getall()
-        return steps
-
-    def parse_ingredients(self, response):
-        ingredients = response.css('[itemprop="recipeIngredient"]::text').getall()
-        return ingredients
+    

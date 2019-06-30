@@ -15,6 +15,16 @@ class EdimdomaRuSpider(BaseSpider):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def parse_page(self, respose):
+        # follow links to recipe pages
+        for href in response.css('article.card + a::attr(href)'):
+            yield response.follow(href, self.parse_recipe)
+
+        # follow pagination links
+        for href in response.css('a.paginator__nav.paginator__nav_next::attr(href)'):
+            yield response.follow(href, self.parse_page)
+
         
 
     def parse_ingredients(self, response):

@@ -7,6 +7,10 @@ from scrapy.crawler import CrawlerProcess
 from scrapy import signals
 from scrapy.signalmanager import dispatcher
 
+def normalize_steps(steps):
+        steps = [remove_multiple_spaces(step) for step in steps]         
+        steps = [step for step in steps if step]
+
 # more about running scrapy from script
 # https://scrapy.readthedocs.io/en/latest/topics/practices.html
 
@@ -16,6 +20,7 @@ class RecipeSaver:
         self.recipe = 'default'
     def set_recipe(self, spider):
         self.recipe = spider.result
+       
         
 
 data = RecipeSaver()
@@ -27,7 +32,9 @@ process = CrawlerProcess()
 process.crawl(EdaRuSpider, start_url='https://eda.ru/recepty/zakuski/brusketta-s-pomidorami-29566')
 process.start()  
 
-print(data.recipe['steps'][3])
+
+
+print(data.recipe)
 
 # we can get the crawling results into a variable using signals https://stackoverflow.com/questions/23574636/scrapy-from-script-output-in-json
 # though it seems to conflict with the asynchronous nature of scrapy

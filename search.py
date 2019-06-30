@@ -15,13 +15,6 @@ from recipe import Recipe
 # https://scrapy.readthedocs.io/en/latest/topics/practices.html
 
 
-
-        
-
-
-
-
-
 class Searcher:
     def __init__(self):
         self.api_key = 'AIzaSyDjzp4FOOJxWupaC1buwavTUVTwRTXvXTw'
@@ -52,6 +45,7 @@ process.start()
 
 
 recipe = Recipe(data.recipe)
+
 print(recipe.steps[3])
 
 
