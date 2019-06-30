@@ -80,8 +80,9 @@ def handle_previous_step(req, res, context):
 
 @intent_handler('get_ingredients')
 def handle_get_ingredients(req, res, context):
-    res['response']['text'] = context.ingredients
-    res['response']['tts'] = context.ingredients
+    res['response']['text'] = context.ingredients_text
+    res['response']['tts'] = context.ingredients_text
+
 @intent_handler('get_time')
 def handle_get_time(req, res, context):
     res['response']['text'] = responses['get_time'][0]
