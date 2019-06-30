@@ -8,6 +8,7 @@ from scrapy import signals
 from scrapy.signalmanager import dispatcher
 
 from natasha import MoneyRangeExtractor
+from recipe import remove_multiple_spaces
 
 
 class RecipeSaver:
@@ -16,9 +17,11 @@ class RecipeSaver:
     def set_recipe(self, spider):
         self.recipe = spider.result
 
-def normalize_steps(steps):
-        steps = [remove_multiple_spaces(step) for step in steps]         
-        steps = [step for step in steps if step]
+def normalize_steps(text):
+    steps = text.split('\n')
+    steps = [remove_multiple_spaces(step) for step in steps]
+    steps = [step for step in steps if step]
+    return ' '.join(steps)
 
 
 
