@@ -86,3 +86,148 @@ for sentence in sentences_parse:
 			verb_dict[token['form']] = list(sentence.metadata.values())[-1]
 
 print(verb_dict)
+
+
+def get_conllu(model_path, text):
+    """
+    Preprocess text using ufal.udpipe.Model and CoNLL-U Parser.
+
+    :param model_path: path to ufal.udpipe.Model (str)
+    :param text: (str)
+    :return: (list of TokenLists)
+    """
+    model = Model(model_path)
+
+    sentences = model.tokenize(text)
+
+    for sentence in sentences:
+        model.tag(sentence)
+        model.parse(sentence)
+
+    sentences_conllu = model.write(sentences, 'conllu')
+    sentences_conllu_parsed = parse(sentences_conllu)
+
+    return sentences_conllu_parsed
+
+
+def check_brackets(bracket_num, token):
+    """
+    Check if a token is in brackets (or a token represents a bracket itself).
+
+    :param bracket_num: the number of open brackets (int)
+    :param token: token from the parsed CoNLL-U formatted string (OrderedDict)
+    :return: bracket_num (int)
+    """
+    if token['form'] in '({[':
+        bracket_num += 1
+
+    elif token['form'] in ')}]':
+        bracket_num -= 1
+
+    return bracket_num
+
+
+def check_verb(token):
+    """
+    Check if a token is a verb (participles and converbs are excluded).
+
+    :param token: token from the parsed CoNLL-U formatted string (OrderedDict)
+    :return: (bool)
+    """
+    if token['upostag'] == 'VERB' and \
+       token['feats']['VerbForm'] != 'Part' and \
+       token['feats']['VerbForm'] != 'Conv':
+
+        return True
+    return
+
+
+def check_space(token):
+    """
+    Check if a space is needed after a token.
+
+    :param token: token from the parsed CoNLL-U formatted string (OrderedDict)
+    :return: a space or an empty string (str)
+    """
+    if token['misc'] and \
+        ('SpaceAfter' in token['misc'].keys() or
+         'SpacesAfter' in token['misc'].keys()):
+        return ''
+    return ' '
+
+
+def split_sentences(model_path, text):
+    """
+    Split verbs in sentences (only in cases when the verbs are originally separated by punctuation marks).
+    The sentences with subordinating conjunctions or sentences in brackets are not splitted.
+
+    :param model_path: path to ufal.udpipe.Model (str)
+    :param text: text to split (str)
+    :return: a list of splitted parts of each sentence (a list of lists)
+
+    :example:
+    >>> text = 'Готовый пирог посыпать сахарной пудрой, украсить черникой. При желании, украсить посыпкой.'
+    >>> print(split_sentences('russian-syntagrus-ud-2.0-170801.udpipe', text))
+    [['Готовый пирог посыпать сахарной пудрой, ', 'украсить черникой. '], ['При желании, украсить посыпкой.']]
+
+    :exceptions:
+    >>> text_with_subordinating_conj = 'Если верх пирога начнет пригорать, накройте его фольгой.'
+    >>> print(split_sentences('russian-syntagrus-ud-2.0-170801.udpipe', text_with_subordinating_conj))
+    [['Если верх пирога начнет пригорать, накройте его фольгой.']]
+
+    >>> text_with_part_conv = 'Посолив, добавить 3 зубчика чеснока, выдавленного через чеснокодавку.'
+    >>> print(split_sentences('russian-syntagrus-ud-2.0-170801.udpipe', text_with_part_conv))
+    [['Посолив, добавить 3 зубчика чеснока, выдавленного через чеснокодавку.']]
+
+    >>> text_in_brackets = 'Форму (я использовала форму размером 25 см) немного смазать маслом.'
+    >>> print(split_sentences('russian-syntagrus-ud-2.0-170801.udpipe', text_in_brackets))
+    [['Форму (я использовала форму размером 25 см) немного смазать маслом.']]
+    """
+    conllu_sentences = get_conllu(model_path, text)
+    result = []
+
+    for sentence in conllu_sentences:
+
+        sentence_list = ['']
+        current = ''
+        bracket_num = 0
+        verb_in_prev = False
+        verb_in_current = False
+        sconj_in_sentence = False
+
+        for token in sentence:
+
+            current += token['form'] + check_space(token)
+            bracket_num = check_brackets(bracket_num, token)
+
+            if bracket_num:
+                continue
+
+            elif token['upostag'] == 'PUNCT':
+
+                if verb_in_current:
+                    if verb_in_prev and not sconj_in_sentence:
+                        sentence_list.append(current)
+                    else:
+                        sentence_list[-1] += current
+
+                    verb_in_prev = True
+                    verb_in_current = False
+
+                else:
+                    sentence_list[-1] += current
+
+                current = ''
+
+            elif check_verb(token):
+                verb_in_current = True
+
+            elif token['upostag'] == 'SCONJ':
+                sconj_in_sentence = True
+
+        if current and (not sentence_list or sentence_list[-1] != current):
+            sentence_list.append(current.strip())
+
+        result.append(sentence_list)
+
+    return result
