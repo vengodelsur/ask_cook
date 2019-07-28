@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  cache:
+    image: memcached
+    expose:
+      - "11211"
+  web:
+    environment:
+      - NO_SSL=true
+    build:
+      context: ../heroku
+      dockerfile: ../docker/Dockerfile.web
+    command: python3 /app/cleaned_demo.py
+    volumes:
+      - ../heroku:/app
+    links:
+        - cache
+    ports:
+      - "5000:5000"
+    depends_on:
+      - cache

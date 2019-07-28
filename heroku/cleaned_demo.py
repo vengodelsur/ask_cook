@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, request, jsonify, render_template
 from flask_restful import reqparse, abort, Api, Resource
+import pymemcache
 
 import json
 import logging
+import os
 from intents import *
 
 app = Flask(__name__)
@@ -90,8 +92,21 @@ def main_alice():
         )
 
 
+@app.route("/memcached/<key>", methods=['POST', 'GET'])
+def memcache_test(key):
+    mc = pymemcache.Client(('cache', 11211))
+    if request.method == 'POST':
+        mc.set(key, request.get_data())
+    return mc.get(key) or '[No value]'
 
 
 if __name__ == "__main__":
     # app.run(debug=True)
-    app.run(host='0.0.0.0', ssl_context='adhoc')
+
+    kwargs = {'ssl_context': 'adhoc'}
+    if os.environ.get('NO_SSL'):
+        # No ssl in docker
+        assert 'ssl_context' in kwargs
+        del kwargs['ssl_context']
+
+    app.run(host='0.0.0.0', **kwargs)

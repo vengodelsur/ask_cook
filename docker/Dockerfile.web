@@ -1,0 +1,7 @@
+FROM ubuntu
+ENV PYTHONUNBUFFERED 1
+COPY requirements.txt /root/
+RUN set -x && \
+    apt-get update && \
+    apt-get install -y python3 python3-pip && \
+    pip3 install -r /root/requirements.txt
