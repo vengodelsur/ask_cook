@@ -1,6 +1,6 @@
 Flask==0.12.2
 Flask-Cors==3.0.3
-Jinja2==2.8
+Jinja2==2.11.3
 Werkzeug==0.14.1
 certifi==2018.4.16
 chardet==3.0.4
